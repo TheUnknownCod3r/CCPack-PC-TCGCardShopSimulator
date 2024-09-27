@@ -42,6 +42,48 @@ namespace BepinControl
 
             return new CrowdResponse(req.GetReqID(), status, message);
         }
+
+
+        public static CrowdResponse HeyOhh(ControlClient client, CrowdRequest req)
+        {
+            CrowdResponse.Status status = CrowdResponse.Status.STATUS_SUCCESS;
+            string message = "";
+
+            List<Customer> customers = (List<Customer>)getProperty(CSingleton<CustomerManager>.Instance, "m_CustomerList");
+            CustomerManager customerManager = CSingleton<CustomerManager>.Instance;
+            try
+            {
+                TestMod.ActionQueue.Enqueue(() =>
+                {
+
+                    if (customers == null)
+                    {
+                        TestMod.mls.LogInfo("Customer list not found.");
+                        return;
+                    }
+
+                    // Loop through the customer list and add each customer to the smelly customer list
+                    foreach (Customer customer in customers)
+                    {
+                        if (customer.isActiveAndEnabled)
+                        {
+                            List<string> textList = new List<string> { "heyooo" };
+
+                            setProperty(customer, "m_IsChattyCustomer ", true);
+                            CSingleton<PricePopupSpawner>.Instance.ShowTextPopup(textList[0], 1.8f, customer.transform);
+                        }
+                    }
+
+                });
+            }
+            catch (Exception e)
+            {
+                TestMod.mls.LogInfo($"Crowd Control Error: {e.ToString()}");
+                status = CrowdResponse.Status.STATUS_RETRY;
+            }
+
+            return new CrowdResponse(req.GetReqID(), status, message);
+        }
         public static CrowdResponse SpawnCustomer(ControlClient client, CrowdRequest req)
         {
             CrowdResponse.Status status = CrowdResponse.Status.STATUS_SUCCESS;
@@ -54,7 +96,22 @@ namespace BepinControl
             {
                 TestMod.ActionQueue.Enqueue(() =>
                 {
-                    CM.GetNewCustomer();
+                    
+
+                    if (req.targets != null)
+                    {
+
+                        if (req.targets[0].service == "twitch") {
+                            TestMod.twitchChannel = req.targets[0].name;
+                        }
+                    }
+                    TestMod.NameOverride = req.viewer;
+                    TestMod.isSmelly = false;
+                    Customer newCustomer = CM.GetNewCustomer();
+                    TestMod.NameOverride = "";
+                    newCustomer.name = req.viewer;
+                    TestMod.mls.LogInfo($"Crowd Control Error: {req.targets.ToString()}");
+
                 });
             }
             catch (Exception e)
@@ -77,8 +134,26 @@ namespace BepinControl
             {
                 TestMod.ActionQueue.Enqueue(() =>
                 {
+
+                    if (req.targets != null)
+                    {
+
+                        if (req.targets[0].service == "twitch")
+                        {
+                            TestMod.twitchChannel = req.targets[0].name;
+                        }
+                    }
+                    TestMod.isSmelly = true;
+                    TestMod.NameOverride = req.viewer;
                     Customer Smelly = CM.GetNewCustomer();
-                    if (Smelly != null) Smelly.SetSmelly();
+                    if (Smelly != null)
+                    {
+                        Smelly.SetSmelly();
+                        Smelly.name = req.viewer;
+                    }
+                    TestMod.isSmelly = false;
+
+
                 });
             }
             catch (Exception e)
@@ -143,11 +218,21 @@ namespace BepinControl
                 {
 
 
-                    Transform pos = CSingleton<InteractionPlayerController>.Instance.transform;
+                    Transform pos = CSingleton<InteractionPlayerController>.Instance.m_WalkerCtrl.transform;
                     TestMod.mls.LogInfo($"Player POS: {pos.position}");
                     Vector3 teleportPosition = new Vector3();
 
-                    teleportPosition = new Vector3(15.00f, 0.06f, -1.46f);
+                    List<Vector3> possiblePositions = new List<Vector3>()
+                    {
+                        new Vector3(12.81f, -0.09f, -36.44f),
+                        new Vector3(11.19f, -0.09f, 10.04f),
+                        new Vector3(12.22f, -0.09f, 0.44f)
+                    };
+
+                    int randomIndex = UnityEngine.Random.Range(0, possiblePositions.Count);
+
+                    teleportPosition = possiblePositions[randomIndex];
+
                     CSingleton<InteractionPlayerController>.Instance.m_WalkerCtrl.transform.position = teleportPosition;
 
 
@@ -376,7 +461,7 @@ namespace BepinControl
             }
             catch
             {
-                return new CrowdResponse(req.GetReqID(), CrowdResponse.Status.STATUS_FAILURE, "WHERES THE MONEY");
+                return new CrowdResponse(req.GetReqID(), CrowdResponse.Status.STATUS_FAILURE, "Player has too much money?");
 
             }
             try
@@ -407,7 +492,7 @@ namespace BepinControl
             }
             catch
             {
-                return new CrowdResponse(req.GetReqID(), CrowdResponse.Status.STATUS_FAILURE, "WHERES THE MONEY");
+                return new CrowdResponse(req.GetReqID(), CrowdResponse.Status.STATUS_FAILURE, "Player has no money to take.");
 
             }
             try
@@ -467,7 +552,7 @@ namespace BepinControl
             CrowdResponse.Status status = CrowdResponse.Status.STATUS_SUCCESS;
             string message = "";
 
-            if (CPlayerData.m_UnlockWarehouseRoomCount == 8 || CPlayerData.m_IsWarehouseRoomUnlocked == false) return new CrowdResponse(req.GetReqID(), CrowdResponse.Status.STATUS_RETRY, "Storage Is Unlocked");
+            if (CPlayerData.m_UnlockWarehouseRoomCount == 8 || CPlayerData.m_IsWarehouseRoomUnlocked == false) return new CrowdResponse(req.GetReqID(), CrowdResponse.Status.STATUS_RETRY, "Storage is already unlocked.");
             try
             {
                 TestMod.ActionQueue.Enqueue(() =>
@@ -487,7 +572,7 @@ namespace BepinControl
             CrowdResponse.Status status = CrowdResponse.Status.STATUS_SUCCESS;
             string message = "";
 
-            if (CPlayerData.m_UnlockRoomCount == 20) return new CrowdResponse(req.GetReqID(), CrowdResponse.Status.STATUS_RETRY, "Storage Is Unlocked");
+            if (CPlayerData.m_UnlockRoomCount == 20) return new CrowdResponse(req.GetReqID(), CrowdResponse.Status.STATUS_RETRY, "Storage is already unlocked.");
             try
             {
                 TestMod.ActionQueue.Enqueue(() =>
@@ -507,7 +592,7 @@ namespace BepinControl
             CrowdResponse.Status status = CrowdResponse.Status.STATUS_SUCCESS;
             string message = "";
 
-            if (CPlayerData.m_IsWarehouseRoomUnlocked == true) return new CrowdResponse(req.GetReqID(), CrowdResponse.Status.STATUS_RETRY, "Storage Is Unlocked");
+            if (CPlayerData.m_IsWarehouseRoomUnlocked == true) return new CrowdResponse(req.GetReqID(), CrowdResponse.Status.STATUS_RETRY, "Storage is already unlocked.");
             try
             {
                 TestMod.ActionQueue.Enqueue(() =>
@@ -541,7 +626,7 @@ namespace BepinControl
             }
             catch
             {
-                return new CrowdResponse(req.GetReqID(), CrowdResponse.Status.STATUS_FAILURE, "WHERES THE MONEY");
+                return new CrowdResponse(req.GetReqID(), CrowdResponse.Status.STATUS_FAILURE, "Unable to spawn item.");
 
             }
             try
@@ -581,7 +666,7 @@ namespace BepinControl
                 }
                 catch
                 {
-                    return new CrowdResponse(req.GetReqID(), CrowdResponse.Status.STATUS_FAILURE, "WHERES THE MONEY");
+                    return new CrowdResponse(req.GetReqID(), CrowdResponse.Status.STATUS_FAILURE, "Unable to spawn at player.");
 
                 }
             try
@@ -589,11 +674,9 @@ namespace BepinControl
                 TestMod.ActionQueue.Enqueue(() =>
                 {
                    
-
                     Transform pos = CSingleton<InteractionPlayerController>.Instance.m_WalkerCtrl.transform;
                     Vector3 position = pos.position;
                     Quaternion rotation = pos.rotation;
-                    var currentCount = getProperty(CSingleton<RestockManager>.Instance, "m_SpawnedBoxCount");
                     if (item2.isBigBox)
                     {
                         InteractablePackagingBox_Item interactablePackagingBox_Item = UnityEngine.Object.Instantiate<InteractablePackagingBox_Item>(CSingleton<RestockManager>.Instance.m_PackageBoxPrefab, position, rotation, CSingleton<RestockManager>.Instance.m_PackageBoxParentGrp);
@@ -606,7 +689,6 @@ namespace BepinControl
                         interactablePackagingBox_Item2.FillBoxWithItem(item2.itemType, 32);
                         interactablePackagingBox_Item2.name = interactablePackagingBox_Item2.m_ObjectType.ToString() + getProperty(CSingleton<RestockManager>.Instance, "m_SpawnedBoxCount");
                     }
-
                 });
 
             }
@@ -632,6 +714,7 @@ namespace BepinControl
 
             f.SetValue(a, val);
         }
+
 
         public static System.Object getProperty(System.Object a, string prop)
         {

@@ -288,6 +288,8 @@ namespace BepinControl
                 {"language_arabic", CrowdDelegates.SetLanguage },
                 {"language_dutch", CrowdDelegates.SetLanguage },
 
+                {"speak_heyoo", CrowdDelegates.HeyOhh },
+
             };
         }
 

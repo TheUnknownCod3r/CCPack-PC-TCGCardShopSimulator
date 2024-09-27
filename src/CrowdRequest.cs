@@ -1,6 +1,7 @@
 ﻿using System.Net.Sockets;
 using System.Text;
 using Newtonsoft.Json;
+using static UnityEngine.GraphicsBuffer;
 
 namespace BepinControl
 {
@@ -14,6 +15,7 @@ namespace BepinControl
         public int duration;
         public string type;
         public string viewer;
+        public Target[] targets; // Adding Target support
 
         public static CrowdRequest Recieve(ControlClient client, Socket socket)
         {
@@ -80,6 +82,19 @@ namespace BepinControl
         public bool IsKeepAlive()
         {
             return id == 0 && type == "255";
+        }
+
+        public class Target
+        {
+            public string service; // E.g., Twitch, YouTube, etc.
+            public string id;      // Target ID (e.g., viewer or streamer's ID)
+            public string name;    // Target's name
+            public string avatar;  // Optional avatar URL
+
+            public override string ToString()
+            {
+                return $"Target(Service: {service}, ID: {id}, Name: {name}, Avatar: {avatar})";
+            }
         }
     }
 }
