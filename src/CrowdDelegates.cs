@@ -1,4 +1,4 @@
-﻿
+
 using DG.Tweening;
 using DG.Tweening.Core.Easing;
 using I2.Loc;
@@ -561,6 +561,65 @@ namespace BepinControl
 
             return new CrowdResponse(req.GetReqID(), status, message);
         }
+
+
+        public static CrowdResponse GiveItemAtPlayer(ControlClient client, CrowdRequest req) //https://pastebin.com/BVEACvGA item list
+        {
+            CrowdResponse.Status status = CrowdResponse.Status.STATUS_SUCCESS;
+            string message = "";
+            var item = "";
+            RestockData item2 = null;
+            string[] enteredText = req.code.Split('_');
+            if (enteredText.Length > 0)
+                try
+                {
+                    if (enteredText.Length == 5) item = string.Join(" ", enteredText[1], enteredText[2], enteredText[3], enteredText[4]);
+                    else if (enteredText.Length == 4) item = string.Join(" ", enteredText[1], enteredText[2], enteredText[3]);//playmat, Plushie
+                    else if (enteredText.Length == 3) item = string.Join(enteredText[1], enteredText[2]);//single items like Freshener
+                    else item = enteredText[1];
+                    item2 = CSingleton<InventoryBase>.Instance.m_StockItemData_SO.m_RestockDataList.Find(z => z.name.ToLower().Contains(item.ToLower()));//Item bools
+                }
+                catch
+                {
+                    return new CrowdResponse(req.GetReqID(), CrowdResponse.Status.STATUS_FAILURE, "WHERES THE MONEY");
+
+                }
+            try
+            {
+                TestMod.ActionQueue.Enqueue(() =>
+                {
+                   
+
+                    Transform pos = CSingleton<InteractionPlayerController>.Instance.m_WalkerCtrl.transform;
+                    Vector3 position = pos.position;
+                    Quaternion rotation = pos.rotation;
+                    var currentCount = getProperty(CSingleton<RestockManager>.Instance, "m_SpawnedBoxCount");
+                    if (item2.isBigBox)
+                    {
+                        InteractablePackagingBox_Item interactablePackagingBox_Item = UnityEngine.Object.Instantiate<InteractablePackagingBox_Item>(CSingleton<RestockManager>.Instance.m_PackageBoxPrefab, position, rotation, CSingleton<RestockManager>.Instance.m_PackageBoxParentGrp);
+                        interactablePackagingBox_Item.FillBoxWithItem(item2.itemType, 64);
+                        interactablePackagingBox_Item.name = interactablePackagingBox_Item.m_ObjectType.ToString() + getProperty(CSingleton<RestockManager>.Instance, "m_SpawnedBoxCount");
+                    }
+                    else
+                    {
+                        InteractablePackagingBox_Item interactablePackagingBox_Item2 = UnityEngine.Object.Instantiate<InteractablePackagingBox_Item>(CSingleton<RestockManager>.Instance.m_PackageBoxSmallPrefab, position, rotation, CSingleton<RestockManager>.Instance.m_PackageBoxParentGrp);
+                        interactablePackagingBox_Item2.FillBoxWithItem(item2.itemType, 32);
+                        interactablePackagingBox_Item2.name = interactablePackagingBox_Item2.m_ObjectType.ToString() + getProperty(CSingleton<RestockManager>.Instance, "m_SpawnedBoxCount");
+                    }
+
+                });
+
+            }
+            catch (Exception e)
+            {
+                TestMod.mls.LogInfo($"Crowd Control Error: {e.ToString()}");
+                status = CrowdResponse.Status.STATUS_RETRY;
+            }
+
+            return new CrowdResponse(req.GetReqID(), status, message);
+        }
+
+
         public static void setProperty(System.Object a, string prop, System.Object val)
         {
             var f = a.GetType().GetField(prop, BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
