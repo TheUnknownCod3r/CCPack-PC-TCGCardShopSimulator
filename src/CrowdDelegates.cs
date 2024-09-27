@@ -100,7 +100,6 @@ namespace BepinControl
 
                     if (req.targets != null)
                     {
-
                         if (req.targets[0].service == "twitch") {
                             TestMod.twitchChannel = req.targets[0].name;
                         }
@@ -110,7 +109,6 @@ namespace BepinControl
                     Customer newCustomer = CM.GetNewCustomer();
                     TestMod.NameOverride = "";
                     newCustomer.name = req.viewer;
-                    TestMod.mls.LogInfo($"Crowd Control Error: {req.targets.ToString()}");
 
                 });
             }
