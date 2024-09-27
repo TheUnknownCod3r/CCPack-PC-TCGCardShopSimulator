@@ -27,7 +27,7 @@ namespace CrowdControl.Games.Packs.TCGCardShopSimulator
                 new("Upgrade Storage", "upgradewh") { Description = "Upgrade the Storage Room", Category = "Misc" },
                 new("Make All Customers Smelly", "allsmelly") { Description = "Make All the Customers Smelly", Category = "Misc" },
                 new("Upgrade the Player Store", "upgradestore") { Description = "Upgrades the Player Store Size", Category = "Misc" },
-                new("Make the streamer do the Math", "forcemath") { Description = "Force The Player to do Math", Category = "Player" },
+                new("Make the streamer do the Math", "forcemath") { Description = "Force The Player to do Math", Duration = 30, Category = "Player" },
                 new("Teleport Player out of Store", "teleport") { Description = "Teleports the Player over the street", Category = "Player" },
                 new("Give $100", "give_100") { Description = "Give the Player $100", Category = "Money" },
                 new("Give $1000", "give_1000") { Description = "Give the Player $1000", Category = "Money" },
