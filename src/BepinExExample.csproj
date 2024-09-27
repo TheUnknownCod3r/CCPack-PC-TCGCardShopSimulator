@@ -7,7 +7,7 @@
     <ProjectGuid>{D4F6B961-E8AE-4E4B-950C-37644E42D4CA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>LethalCompanyTestMod</RootNamespace>
+    <RootNamespace>BepinControl</RootNamespace>
     <AssemblyName>CrowdControl</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -46,12 +46,6 @@
     <Reference Include="Heathen.Steamworks">
       <HintPath>resources\Heathen.Steamworks.dll</HintPath>
     </Reference>
-    <Reference Include="LeanPool">
-      <HintPath>resources\LeanPool.dll</HintPath>
-    </Reference>
-    <Reference Include="MyBox">
-      <HintPath>resources\MyBox.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -74,6 +68,9 @@
     </Reference>
     <Reference Include="UnityEngine.AIModule">
       <HintPath>resources\UnityEngine.AIModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AnimationModule">
+      <HintPath>F:\SteamLibrary\steamapps\common\TCG Card Shop Simulator\Card Shop Simulator_Data\Managed\UnityEngine.AnimationModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AudioModule">
       <HintPath>resources\UnityEngine.AudioModule.dll</HintPath>

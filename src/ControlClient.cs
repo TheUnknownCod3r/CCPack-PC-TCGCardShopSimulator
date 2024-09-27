@@ -57,30 +57,138 @@ namespace BepinControl
                 //when an effect comes in with the code it will call the paired function
                 {"lights", CrowdDelegates.ToggleLights },
                 {"spawn", CrowdDelegates.SpawnCustomer },
+                {"spawnsmelly", CrowdDelegates.SpawnCustomerSmelly },
+                {"open_store", CrowdDelegates.ShopControls },
+                {"close_store", CrowdDelegates.ShopControls },
+                {"unlockwh", CrowdDelegates.UnlockWarehouse },
+                {"upgradewh", CrowdDelegates.UpgradeWarehouse },
+                {"upgradestore", CrowdDelegates.UpgradeStore },
+                {"teleport", CrowdDelegates.TeleportPlayer },
+                {"forcemath", CrowdDelegates.ForceMath },
+                {"forcepayment_cash", CrowdDelegates.ForcePaymentType},
+                {"forcepayment_card", CrowdDelegates.ForcePaymentType},
                 {"give_100", CrowdDelegates.GiveMoney },
                 {"give_1000", CrowdDelegates.GiveMoney },
                 {"give_10000", CrowdDelegates.GiveMoney },
                 {"take_100", CrowdDelegates.TakeMoney },
                 {"take_1000", CrowdDelegates.TakeMoney },
                 {"take_10000", CrowdDelegates.TakeMoney },
-                {"give_common_pack_(32)", CrowdDelegates.GiveItem },
+                //{"give_common_pack_(32)", CrowdDelegates.GiveItem },
                 {"give_common_pack_(64)", CrowdDelegates.GiveItem },
-                {"give_common_box_(4)", CrowdDelegates.GiveItem },
+                //{"give_common_box_(4)", CrowdDelegates.GiveItem },
                 {"give_common_box_(8)", CrowdDelegates.GiveItem },
-                {"give_rare_pack_(32)", CrowdDelegates.GiveItem },
+                //{"give_rare_pack_(32)", CrowdDelegates.GiveItem },
                 {"give_rare_pack_(64)", CrowdDelegates.GiveItem },
-                {"give_rare_box_(4)", CrowdDelegates.GiveItem },
+                //{"give_rare_box_(4)", CrowdDelegates.GiveItem },
                 {"give_rare_box_(8)", CrowdDelegates.GiveItem },
-                {"give_epic_pack_(32)", CrowdDelegates.GiveItem },
+                //{"give_epic_pack_(32)", CrowdDelegates.GiveItem },
                 {"give_epic_pack_(64)", CrowdDelegates.GiveItem },
-                {"give_epic_box_(4)", CrowdDelegates.GiveItem },
+                //{"give_epic_box_(4)", CrowdDelegates.GiveItem },
                 {"give_epic_box_(8)", CrowdDelegates.GiveItem },
-                {"give_legend_pack_(32)", CrowdDelegates.GiveItem },
+                //{"give_legend_pack_(32)", CrowdDelegates.GiveItem },
                 {"give_legend_pack_(64)", CrowdDelegates.GiveItem },
-                {"give_legend_box_(4)", CrowdDelegates.GiveItem },
+                //{"give_legend_box_(4)", CrowdDelegates.GiveItem },
                 {"give_legend_box_(8)", CrowdDelegates.GiveItem },
+                //{"give_deck_box_red_(sm)", CrowdDelegates.GiveItem },
+                {"give_deck_box_red", CrowdDelegates.GiveItem },
+                //{"give_deck_box_green_(sm)", CrowdDelegates.GiveItem},
+                {"give_deck_box_green", CrowdDelegates.GiveItem },
+                //{"give_deck_box_blue_(sm)", CrowdDelegates.GiveItem },
+                {"give_deck_box_blue", CrowdDelegates.GiveItem },
+                //{"give_deck_box_yellow_(sm)",CrowdDelegates.GiveItem },
+                {"give_deck_box_yellow", CrowdDelegates.GiveItem },
+                //{"give_destiny_common_pack_(32)", CrowdDelegates.GiveItem },
+                {"give_destiny_common_pack_(64)", CrowdDelegates.GiveItem },
+                {"give_destiny_common_box_(8)", CrowdDelegates.GiveItem },
+                //{"give_destiny_common_box_(4)", CrowdDelegates.GiveItem },
+                //{"give_destiny_rare_pack_(32)", CrowdDelegates.GiveItem },
+                {"give_destiny_Rare_pack_(64)", CrowdDelegates.GiveItem },
+                //{"give_destiny_rare_box_(4)", CrowdDelegates.GiveItem },
+                {"give_destiny_rare_box_(8)", CrowdDelegates.GiveItem },
+                //{"give_destiny_epic_pack_(32)", CrowdDelegates.GiveItem },
+                {"give_destiny_epic_pack_(64)", CrowdDelegates.GiveItem },
+                //{"give_destiny_epic_box_(4)", CrowdDelegates.GiveItem },
+                {"give_destiny_epic_box_(8)", CrowdDelegates.GiveItem },
+                //{"give_destiny_legend_pack_(32)", CrowdDelegates.GiveItem },
+                {"give_destiny_legend_pack_(64)", CrowdDelegates.GiveItem },
+                //{"give_destiny_legend_box_(4)", CrowdDelegates.GiveItem },
+                {"give_destiny_legend_box_(8)", CrowdDelegates.GiveItem },
+                {"give_cleanser_(16)", CrowdDelegates.GiveItem },
+                {"give_cleanser_(32)", CrowdDelegates.GiveItem },
+                {"give_collection_book", CrowdDelegates.GiveItem },
+                {"give_d20_dice_red", CrowdDelegates.GiveItem },
+                {"give_d20_dice_blue", CrowdDelegates.GiveItem },
+                {"give_d20_dice_black", CrowdDelegates.GiveItem },
+                {"give_d20_dice_white", CrowdDelegates.GiveItem },
+                {"give_piggya_plushie", CrowdDelegates.GiveItem },
+                {"give_golema_plushie", CrowdDelegates.GiveItem },
+                {"give_starfisha_plushie", CrowdDelegates.GiveItem },
+                {"give_bata_plushie", CrowdDelegates.GiveItem },
+                {"give_toonz_plushie", CrowdDelegates.GiveItem },
+                {"give_burpig_figurine", CrowdDelegates.GiveItem },
+                {"give_inferhog_figurine", CrowdDelegates.GiveItem },
+                {"give_blazoar_plushie", CrowdDelegates.GiveItem },
+                {"give_decimite_figurine", CrowdDelegates.GiveItem },
+                {"give_meganite_figurine", CrowdDelegates.GiveItem },
+                {"give_giganite_statue", CrowdDelegates.GiveItem },
+                {"give_trickstar_figurine", CrowdDelegates.GiveItem },
+                {"give_princestar_figurine", CrowdDelegates.GiveItem },
+                {"give_kingstar_plushie", CrowdDelegates.GiveItem },
+                {"give_lunight_figurine", CrowdDelegates.GiveItem },
+                {"give_vampicant_figurine", CrowdDelegates.GiveItem },
+                {"give_dracunix_figurine", CrowdDelegates.GiveItem },
+                {"give_drilceros_action_figure", CrowdDelegates.GiveItem },
+                {"give_bonfiox_plushie", CrowdDelegates.GiveItem },
+                {"give_premium_collection_book", CrowdDelegates.GiveItem },
+                {"give_fire_battle_deck", CrowdDelegates.GiveItem },
+                {"give_earth_battle_deck", CrowdDelegates.GiveItem },
+                {"give_water_battle_deck", CrowdDelegates.GiveItem },
+                {"give_wind_battle_deck", CrowdDelegates.GiveItem },
+                {"give_fire_destiny_deck", CrowdDelegates.GiveItem },
+                {"give_earth_destiny_deck", CrowdDelegates.GiveItem },
+                {"give_water_destiny_deck", CrowdDelegates.GiveItem },
+                {"give_wind_destiny_deck", CrowdDelegates.GiveItem },
+                {"give_card_sleeves_(clear)", CrowdDelegates.GiveItem },
+                {"give_card_sleeves_(tetramon)", CrowdDelegates.GiveItem },
+                {"give_card_sleeves_(fire)", CrowdDelegates.GiveItem },
+                {"give_card_sleeves_(earth)", CrowdDelegates.GiveItem },
+                {"give_card_sleeves_(water)", CrowdDelegates.GiveItem },
+                {"give_card_sleeves_(wind)", CrowdDelegates.GiveItem },
+                {"give_playmat_(clamigo)", CrowdDelegates.GiveItem },
+                {"give_playmat_(duel)", CrowdDelegates.GiveItem },
                 {"give_playmat_(drilceros)", CrowdDelegates.GiveItem },
+                {"give_playmat_(drakon)", CrowdDelegates.GiveItem },
+                {"give_playmat_(the_four_dragons)", CrowdDelegates.GiveItem },
+                {"give_playmat_(dracunix)", CrowdDelegates.GiveItem },
+                {"give_playmat_(wispo)", CrowdDelegates.GiveItem },
+                {"give_playmat_(gigatronx_evo)", CrowdDelegates.GiveItem },
+                {"give_playmat_(tetramon)", CrowdDelegates.GiveItem },
+                {"give_playmat_(kyrone)", CrowdDelegates.GiveItem },
+                {"give_playmat_(fire)", CrowdDelegates.GiveItem },
+                {"give_playmat_(earth)", CrowdDelegates.GiveItem },
+                {"give_playmat_(wind)", CrowdDelegates.GiveItem },
                 {"give_playmat_(lunight)", CrowdDelegates.GiveItem },
+                {"give_playmat_(water)", CrowdDelegates.GiveItem },
+                {"highfov", CrowdDelegates.HighFOV },
+                {"lowfov", CrowdDelegates.LowFOV },
+                {"invertx", CrowdDelegates.InvertX },
+                {"inverty", CrowdDelegates.InvertY },
+                {"language_english", CrowdDelegates.SetLanguage },
+                {"language_french", CrowdDelegates.SetLanguage },
+                {"language_german", CrowdDelegates.SetLanguage },
+                {"language_italian", CrowdDelegates.SetLanguage },
+                {"language_spanish", CrowdDelegates.SetLanguage },
+                {"language_chineset", CrowdDelegates.SetLanguage },
+                {"language_chineses", CrowdDelegates.SetLanguage },
+                {"language_korean", CrowdDelegates.SetLanguage },
+                {"language_japanese", CrowdDelegates.SetLanguage },
+                {"language_portuguese", CrowdDelegates.SetLanguage },
+                {"language_russian", CrowdDelegates.SetLanguage },
+                {"language_hindi", CrowdDelegates.SetLanguage },
+                {"language_thai", CrowdDelegates.SetLanguage },
+                {"language_arabic", CrowdDelegates.SetLanguage },
+                {"language_dutch", CrowdDelegates.SetLanguage },
+
             };
         }
 
@@ -88,12 +196,13 @@ namespace BepinControl
         {
             try
             {
-                bool isFullyLoaded = GameInstance.m_HasFinishHideLoadingScreen && CSingleton<CGameManager>.Instance.m_IsGameLevel;
+                CGameManager CGM = CSingleton<CGameManager>.Instance;
+                bool isFullyLoaded = CGM.m_IsGameLevel;
                 if(!isFullyLoaded) return false;
                 //make sure the game is in focus otherwise don't let effects trigger
                 if (!TestMod.isFocused) return false;
                 //add check for whether the game is in a state it can accept effects
-                PauseScreen PS = CSingleton < PauseScreen>.Instance;
+                PauseScreen PS = CSingleton<PauseScreen>.Instance;
                 bool isPaused = PS.m_ScreenGrp.activeSelf;
                 if (isPaused) return false;
 
@@ -144,7 +253,7 @@ namespace BepinControl
 
             TestMod.mls.LogInfo("Connected to Crowd Control");
 
-            var timer = new Timer(timeUpdate, null, 0, 200);
+            var timer = new Timer(timeUpdate, null, 0, 150);
 
             try
             {
@@ -172,18 +281,18 @@ namespace BepinControl
 
             if (!inGame)
             {
-                TimedThread.addTime(200);
+                TimedThread.addTime(150);
                 paused = true;
             }
             else if (paused)
             {
                 paused = false;
                 TimedThread.unPause();
-                TimedThread.tickTime(200);
+                TimedThread.tickTime(150);
             }
             else
             {
-                TimedThread.tickTime(200);
+                TimedThread.tickTime(150);
             }
         }
 

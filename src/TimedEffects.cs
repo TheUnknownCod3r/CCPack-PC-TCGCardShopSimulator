@@ -1,6 +1,8 @@
-﻿using System;
+﻿using I2.Loc;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Threading;
 
 namespace BepinControl
@@ -26,15 +28,16 @@ namespace BepinControl
         FORCE_EXACT_CHANGE,
         FORCE_REQUIRE_CHANGE,
         FORCE_LARGE_BILLS,
-        ALLOW_MISCHARGE
+        ALLOW_MISCHARGE,
+        WORKERS_FAST
     }
 
 
     public class Timed
     {
         public TimedType type;
+        public static float org_FOV = 80f;
         float old;
-
         
 
         private static Dictionary<string, object> customVariables = new Dictionary<string, object>();
@@ -60,7 +63,91 @@ namespace BepinControl
 
         public void addEffect()
         {
-
+            switch (type)
+            {
+                case TimedType.SET_LANGUAGE:
+                    {
+                        TestMod.ActionQueue.Enqueue(() =>
+                        {
+                            string newLang = TestMod.NewLanguage;
+                            SettingScreen.Instance.OnPressLanguageSelect(newLang);
+                        });
+                        break;
+                    }
+                case TimedType.FORCE_MATH:
+                    {
+                        TestMod.ActionQueue.Enqueue(() =>
+                        {
+                            TestMod.ForceMath = true;
+                        });
+                        break;
+                    }
+                case TimedType.FORCE_CASH:
+                    {
+                        TestMod.ActionQueue.Enqueue(() =>
+                        {
+                            TestMod.ForceUseCredit = false;
+                            TestMod.ForceUseCash = true;
+                        });
+                        break;
+                    }
+                case TimedType.FORCE_CARD:
+                    {
+                        TestMod.ActionQueue.Enqueue(() =>
+                        {
+                            TestMod.ForceUseCash = false;
+                            TestMod.ForceUseCredit = true;
+                        });
+                        break;
+                    }
+                case TimedType.WORKERS_FAST:
+                    {
+                        TestMod.ActionQueue.Enqueue(() =>
+                        {
+                            Worker worker = CSingleton<Worker>.Instance;
+                            worker.SetExtraSpeedMultiplier(4);
+                        });
+                        break;
+                    }
+                case TimedType.HIGH_FOV:
+                    {
+                        TestMod.ActionQueue.Enqueue(() =>
+                        {
+                            CameraFOVControl camera = CSingleton<CameraFOVControl>.Instance;
+                            org_FOV = (float)CrowdDelegates.getProperty(camera, "m_CurrentFOV");
+                            camera.UpdateFOV(140f);
+                        });
+                        break;
+                    }
+                case TimedType.LOW_FOV:
+                    {
+                        TestMod.ActionQueue.Enqueue(() =>
+                        {
+                            CameraFOVControl camera = CSingleton<CameraFOVControl>.Instance;
+                            org_FOV = (float)CrowdDelegates.getProperty(camera, "m_CurrentFOV");
+                            camera.UpdateFOV(10f);
+                        });
+                        break;
+                    }
+                case TimedType.INVERT_X:
+                    {
+                        TestMod.ActionQueue.Enqueue(() =>
+                        {
+                            InteractionPlayerController IPC = CSingleton<InteractionPlayerController>.Instance;
+                            IPC.m_CameraMouseInput.invertVerticalInput = true;
+                        });
+                        break;
+                    }
+                case TimedType.INVERT_Y:
+                    {
+                        TestMod.ActionQueue.Enqueue(() =>
+                        {
+                            InteractionPlayerController IPC = CSingleton<InteractionPlayerController>.Instance;
+                            IPC.m_CameraMouseInput.invertHorizontalInput = true;
+                        });
+                        break;
+                    }
+            }
         }
 
     
@@ -68,7 +155,105 @@ namespace BepinControl
         {
             try
             {
-                
+                switch(etype)
+                {
+                    case TimedType.FORCE_CASH:
+                        {
+                            TestMod.ActionQueue.Enqueue(() =>
+                            {
+                                try
+                                {
+                                    TestMod.ForceUseCredit = false;
+                                    TestMod.ForceUseCash = false;
+                                }
+                                catch (Exception e)
+                                {
+                                    TestMod.mls.LogInfo(e.ToString());
+                                    Timed.removeEffect(etype);
+                                }
+                            });
+                            break;
+                        }
+                    case TimedType.FORCE_CARD:
+                        {
+                            TestMod.ActionQueue.Enqueue(() =>
+                            {
+                                try
+                                {
+                                    TestMod.ForceUseCash = false;
+                                    TestMod.ForceUseCredit = false;
+                                }
+                                catch (Exception e)
+                                {
+                                    TestMod.mls.LogInfo(e.ToString());
+                                    Timed.removeEffect(etype);
+                                }
+                            });
+                            break;
+                        }
+                    case TimedType.FORCE_MATH:
+                        {
+                            TestMod.ActionQueue.Enqueue(() =>
+                            {
+                                try
+                                {
+                                    TestMod.ForceMath = false;
+                                }
+                                catch (Exception e)
+                                {
+                                    TestMod.mls.LogInfo(e.ToString());
+                                    Timed.removeEffect(etype);
+                                }
+                            });
+                            break;
+                        }
+                        case TimedType.WORKERS_FAST:
+                        {
+                            TestMod.ActionQueue.Enqueue(() =>
+                            {
+                                Worker worker = CSingleton<Worker>.Instance;
+                                worker.SetExtraSpeedMultiplier(1);
+                            });
+                            break;
+                        }
+                    case TimedType.HIGH_FOV:
+                    case TimedType.LOW_FOV:
+                        {
+                            TestMod.ActionQueue.Enqueue(() =>
+                            {
+                                CameraFOVControl camera = CSingleton<CameraFOVControl>.Instance;
+                                camera.UpdateFOV(org_FOV);
+                            });
+                            break;
+                        }
+                    case TimedType.INVERT_X:
+                        {
+                            TestMod.ActionQueue.Enqueue(() =>
+                            {
+                                InteractionPlayerController IPC = CSingleton<InteractionPlayerController>.Instance;
+                                IPC.m_CameraMouseInput.invertVerticalInput = !IPC.m_CameraMouseInput.invertVerticalInput;
+                            });
+                            break;
+                        }
+                    case TimedType.INVERT_Y:
+                        {
+                            TestMod.ActionQueue.Enqueue(() =>
+                            {
+                                InteractionPlayerController IPC = CSingleton<InteractionPlayerController>.Instance;
+                                IPC.m_CameraMouseInput.invertHorizontalInput = !IPC.m_CameraMouseInput.invertHorizontalInput;
+                            });
+                            break;
+                        }
+                    case TimedType.SET_LANGUAGE:
+                        {
+                            TestMod.ActionQueue.Enqueue(() =>
+                            {
+                                string oldLang = TestMod.OrgLanguage;
+                                SettingScreen.Instance.OnPressLanguageSelect(oldLang);
+                            });
+                            break;
+                        }
+                }
             } catch(Exception e)
             {
                 TestMod.mls.LogInfo(e.ToString());

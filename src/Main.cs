@@ -1,10 +1,13 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
 using System.Threading;
 using UnityEngine.EventSystems;
+using System.CodeDom;
+using static Unity.IO.LowLevel.Unsafe.AsyncReadManagerMetrics;
+using System.Runtime.CompilerServices;
 
 
 
@@ -26,8 +29,16 @@ namespace BepinControl
         private ControlClient client = null;
         public static bool isFocused = true;
         public static bool doneItems = false;
-
+        public static bool ForceMath = false;
+        public static bool WorkersFast = false;
+        public static bool ForceUseCash = false;
+        public static bool ForceUseCredit = false;
+        public static bool isWarehouseUnlocked = false;
+        public static int WareHouseRoomsUnlocked = 0;
+        public static int ShopRoomUnlocked = 0;
         public static string NameOverride = "";
+        public static string OrgLanguage = "";
+        public static string NewLanguage = "";
 
         void Awake()
         {
@@ -67,14 +78,16 @@ namespace BepinControl
         [HarmonyPrefix]
         static void RunEffects()
         {
-            if(CGameManager.Instance.m_IsGameLevel && !doneItems)//lets print all card arrays in the restock data, so we can use them
+            if (CGameManager.Instance.m_IsGameLevel && !doneItems)//lets print all card arrays in the restock data, so we can use them
             {
                 foreach (var cardPack in CSingleton<InventoryBase>.Instance.m_StockItemData_SO.m_RestockDataList.ToArray())
                 {
-                    TestMod.mls.LogInfo(cardPack.name);
+                    TestMod.mls.LogInfo(cardPack.name + " : Warehouse Rooms: " + UnlockRoomManager.Instance.m_LockedRoomBlockerList.Count);
+
                 }
                 doneItems = true;
             }
+
             while (ActionQueue.Count > 0)
             {
                 Action action = ActionQueue.Dequeue();
@@ -96,11 +109,57 @@ namespace BepinControl
         [HarmonyPatch(typeof(EventSystem), "OnApplicationFocus")]
         public static class EventSystem_OnApplicationFocus_Patch
         {
-            static void Postfix(bool hasFocus)
+            public static void Postfix(bool hasFocus)
             {
                 isFocused = hasFocus;
             }
         }
+
+
+
+
+        [HarmonyPatch(typeof(InteractableCustomerCash), "SetIsCard")]
+        public static class SetIsCardPatch
+        {
+            public static void Prefix(ref bool isCard)
+            {
+                if (ForceUseCash)
+                {
+                    isCard = false;
+                    return;
+                }
+                if (ForceUseCredit)
+                {
+                    isCard = true;
+                    return;
+                }
+            }
+        }
+
+
+
+        [HarmonyPatch(typeof(InteractableCashierCounter), "StartGivingChange")]
+        public static class StartGivingChangePatch
+        {
+
+            public static void Prefix(InteractableCashierCounter __instance, ref bool ___m_IsUsingCard)
+            {
+
+
+                if (ForceUseCash)
+                {
+                    ___m_IsUsingCard = false;
+                }
+
+                if (ForceUseCredit)
+                {
+                    ___m_IsUsingCard = true;
+                }
+
+            }
+        }
+
+
 
 
     }
