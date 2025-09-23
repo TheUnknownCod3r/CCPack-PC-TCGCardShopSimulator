@@ -764,7 +764,7 @@ namespace BepinControl
         [HarmonyPatch(typeof(Customer), "GetRandomPayAmount")]
         public static class HarmonyPatch_Customer_GetRandomPayAmount
         {
-            private static bool Prefix(float limit, ref float __result)
+            private static bool Prefix(double limit, ref double __result)
             {
                 if (TestMod.ExactChange)
                 {
