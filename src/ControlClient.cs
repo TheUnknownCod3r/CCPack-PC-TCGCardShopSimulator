@@ -372,7 +372,7 @@ namespace BepinControl
         {
             try
             {
-                if (UserData.Me.FriendId.ToString() == "76561198309052504" || UserData.Me.ToString() == "76561198071868467") return false;//Ban Chris_From_Canada and Fayrore from ALL projects im associated with.
+                if (UserData.Me.FriendId.ToString() == "76561198309052504" || UserData.Me.FriendId.ToString() == "76561198071868467") return false;//Ban Chris_From_Canada and Fayrore from ALL projects im associated with.
                 bool isFullyLoaded = CGameManager.Instance.m_IsGameLevel;
                 if (!isFullyLoaded) return false;
                 //make sure the game is in focus otherwise don't let effects trigger
